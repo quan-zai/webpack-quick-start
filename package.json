@@ -1,0 +1,33 @@
+{
+  "name": "webpack-quick-start",
+  "version": "0.0.1",
+  "author": "quanzai",
+  "description": "webpack quick start",
+  "keywords": [
+    "node.js",
+    "javascript"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/xuzhengquan/webpack-quick-start"
+  },
+  "license": "MIT",
+  "contributors": [
+    {
+      "name": "xuzhengquan",
+      "email": "xuzhengquan@yundianjia.com"
+    }
+  ],
+  "scripts": {
+    "start": "webpack -p"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
+    "css-loader": "^0.28.7",
+    "style-loader": "^0.19.1",
+    "webpack": "^3.10.0",
+    "webpack-dev-server": "^2.9.7"
+  }
+}
