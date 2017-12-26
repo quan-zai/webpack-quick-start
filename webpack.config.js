@@ -29,17 +29,10 @@ module.exports = {
             // css-loader 解析css, style-loader 将样式插入到style标签 modules：css-modules 模块化css文件，防止污染全局
             {
                 test: /\.css$/,
-                use: [
-                    {
-                        loader: "style-loader",
-                    },
-                    {
-                        loader: "css-loader",
-                        options: {
-                            modules: true
-                        }
-                    }
-                ]
+                use: ExtractTextPlugin.extract({
+                    fallback: "style-loader",
+                    use: "css-loader?modules"
+                })
             },
 
             // 样式预编译
@@ -87,7 +80,7 @@ module.exports = {
         }),
         // css单独打包成chunk
         new ExtractTextPlugin({
-            filename: "[name].[contenthash].css",
+            filename: "styles/[name].[contenthash].css",
             allChunks: true
         }),
 
@@ -122,7 +115,6 @@ module.exports = {
         contentBase: path.resolve(__dirname, './dist'),
         publicPath: '/',
         port: 9001,
-        hot: true,
         inline: true
     }
 }
