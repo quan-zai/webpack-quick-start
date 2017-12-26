@@ -111,6 +111,7 @@ module.exports = {
         new webpack.HotModuleReplacementPlugin()
     ],
 
+    // 若使用ExtractTextPlugin，DevServer中的hot=true参数要去掉，否则css文件无法热更新
     devServer: {
         contentBase: path.resolve(__dirname, './dist'),
         publicPath: '/',
