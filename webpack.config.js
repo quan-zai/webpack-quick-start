@@ -3,11 +3,12 @@ const webpack = require('webpack');
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const CleanWebpackPlugin = require('clean-webpack-plugin')
 
 module.exports = {
     entry:
         [
-            path.resolve(__dirname, 'assets/main.js'),
+            path.resolve(__dirname, 'src/main.js'),
         ],
     output: {
         path: path.resolve(__dirname, './dist'),
@@ -28,7 +29,17 @@ module.exports = {
             // css-loader 解析css, style-loader 将样式插入到style标签 modules：css-modules 模块化css文件，防止污染全局
             {
                 test: /\.css$/,
-                use: ['style-loader?modules', 'css-loader?modules']
+                use: [
+                    {
+                        loader: "style-loader",
+                    },
+                    {
+                        loader: "css-loader",
+                        options: {
+                            modules: true
+                        }
+                    }
+                ]
             },
 
             // 样式预编译
@@ -46,14 +57,25 @@ module.exports = {
                 test: /\.(png|jpg|jpeg|gif)$/,
                 use: [
                     {
-                        loader: 'url-loader',
+                        loader: 'file-loader',
                         options: {
                             limit: 1024,
                             name: 'img/[name].[ext]'
                         }
                     }
                 ]
+            },
+
+            // font load
+            {
+                test: /\.(woff|woff2|eot|ttf|otf)$/,
+                use: [
+                    'file-loader'
+                ]
             }
+
+            // csv / tsv data load csv-loader
+            // xml load xml-loader
         ]
     },
     
@@ -76,8 +98,14 @@ module.exports = {
 
         // generate html5 file for you that includes all your webpack bundles in the body using script tags.
         new HtmlWebpackPlugin({
-            template: './assets/index.html'
-        })
+            template: './src/index.html'
+        }),
+
+        // clean dist before build
+        new CleanWebpackPlugin(
+            ['dist']
+        ),
+
     ],
 
     devServer: {
