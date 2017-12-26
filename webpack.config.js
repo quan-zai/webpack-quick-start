@@ -13,7 +13,7 @@ module.exports = {
     output: {
         path: path.resolve(__dirname, './dist'),
         publicPath: '/',
-        filename: '[name].[chunkhash].js',
+        filename: '[name].[hash].js',
         chunkFilename: "[id].chunk.js"
     },
 
@@ -87,14 +87,14 @@ module.exports = {
         }),
         // css单独打包成chunk
         new ExtractTextPlugin({
-            filename: "[name].bundle.css",
+            filename: "[name].[contenthash].css",
             allChunks: true
         }),
 
         // minify output js codes
-        new UglifyJsPlugin({
-            cache: true
-        }),
+        // new UglifyJsPlugin({
+        //     cache: true
+        // }),
 
         // generate html5 file for you that includes all your webpack bundles in the body using script tags.
         new HtmlWebpackPlugin({
@@ -106,11 +106,23 @@ module.exports = {
             ['dist']
         ),
 
+        // global var
+        new webpack.ProvidePlugin({
+            $: "jquery",
+            jQuery: "jquery",
+            "window.jQuery": "jquery"
+        }),
+
+        new webpack.NamedModulesPlugin(),
+
+        new webpack.HotModuleReplacementPlugin()
     ],
 
     devServer: {
         contentBase: path.resolve(__dirname, './dist'),
         publicPath: '/',
-        port: 9001
+        port: 9001,
+        hot: true,
+        inline: true
     }
 }
