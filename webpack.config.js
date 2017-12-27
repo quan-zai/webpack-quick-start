@@ -7,14 +7,15 @@ const CleanWebpackPlugin = require('clean-webpack-plugin')
 
 module.exports = {
     entry: {
+        lib: ['react'],
+        vendor: [],
         main: path.resolve(__dirname, 'src/main.js'),
-        react: ['react'],
     },
     output: {
         path: path.resolve(__dirname, './dist'),
         publicPath: '/',
-        filename: '[name].js',
-        chunkFilename: "[id].js"
+        filename: '[name].[hash].js',
+        chunkFilename: "[id].[chunkhash:8].js"
     },
 
     module: {
@@ -52,7 +53,7 @@ module.exports = {
                         loader: 'file-loader',
                         options: {
                             limit: 1024,
-                            name: 'img/[name].[ext]'
+                            name: 'img/[name].[hash:8].[ext]'
                         }
                     }
                 ]
@@ -74,19 +75,22 @@ module.exports = {
     plugins: [
         // 公用模块打包成chunk
         new webpack.optimize.CommonsChunkPlugin({
-            name: ['main', 'react'],
-            minChunks: 2
+            name: 'lib',
+            minChunks: Infinity,
         }),
 
         new webpack.optimize.CommonsChunkPlugin({
             name: 'manifest',
-            minChunks: Infinity,
-            children: true
+            chunks: ['lib']
+        }),
+
+        new webpack.HashedModuleIdsPlugin({
+
         }),
 
         // css单独打包成chunk
         new ExtractTextPlugin({
-            filename: "styles/[name].css",
+            filename: "styles/[name].[contenthash].css",
             allChunks: true
         }),
 
@@ -120,6 +124,7 @@ module.exports = {
             "window.jQuery": "jquery"
         }),
 
+        // 使用模块的相对路径作为模块的id
         new webpack.NamedModulesPlugin(),
 
         // hot module replace
