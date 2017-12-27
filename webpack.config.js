@@ -6,15 +6,15 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const CleanWebpackPlugin = require('clean-webpack-plugin')
 
 module.exports = {
-    entry:
-        [
-            path.resolve(__dirname, 'src/main.js'),
-        ],
+    entry: {
+        main: path.resolve(__dirname, 'src/main.js'),
+        react: ['react'],
+    },
     output: {
         path: path.resolve(__dirname, './dist'),
         publicPath: '/',
-        filename: '[name].[hash].js',
-        chunkFilename: "[id].chunk.js"
+        filename: '[name].js',
+        chunkFilename: "[id].js"
     },
 
     module: {
@@ -38,11 +38,10 @@ module.exports = {
             // 样式预编译
             {
                 test: /\.(sass|scss)$/,
-                use: [
-                    'style-loader',
-                    'css-loader',
-                    'sass-loader',
-                ]
+                use: ExtractTextPlugin.extract({
+                    fallback: "style-loader",
+                    use: ["css-loader?modules", "sass-loader"]
+                })
             },
 
             // require img in js file, return DateURL
@@ -75,18 +74,27 @@ module.exports = {
     plugins: [
         // 公用模块打包成chunk
         new webpack.optimize.CommonsChunkPlugin({
-            name: 'common',
+            name: ['main', 'react'],
             minChunks: 2
         }),
+
+        new webpack.optimize.CommonsChunkPlugin({
+            name: 'manifest',
+            minChunks: Infinity,
+            children: true
+        }),
+
         // css单独打包成chunk
         new ExtractTextPlugin({
-            filename: "styles/[name].[contenthash].css",
+            filename: "styles/[name].css",
             allChunks: true
         }),
 
         // minify output js codes
         // new UglifyJsPlugin({
-        //
+        //     compress: {
+        //         warnings: false
+        //     }
         // }),
 
         // generate html5 file for you that includes all your webpack bundles in the body using script tags.
@@ -115,7 +123,16 @@ module.exports = {
         new webpack.NamedModulesPlugin(),
 
         // hot module replace
-        new webpack.HotModuleReplacementPlugin()
+        new webpack.HotModuleReplacementPlugin(),
+
+        // 公共导入
+        new webpack.ProvidePlugin({
+            'React': 'react',
+            $:"jquery",
+            jQuery:"jquery",
+            "window.jQuery":"jquery",
+            CSSModules: "react-css-modules"
+        })
     ],
 
     // 若使用ExtractTextPlugin，DevServer中的hot=true参数要去掉，否则css文件无法热更新
