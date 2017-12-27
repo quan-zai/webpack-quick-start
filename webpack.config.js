@@ -86,12 +86,18 @@ module.exports = {
 
         // minify output js codes
         // new UglifyJsPlugin({
-        //     cache: true
+        //
         // }),
 
         // generate html5 file for you that includes all your webpack bundles in the body using script tags.
         new HtmlWebpackPlugin({
-            template: './src/index.html'
+            template: './src/index.html',
+            inject: 'body',
+            hash: true,
+            minify: {
+                removeComments: true,      // 移除html中的注释
+                collapseWhitespace: false  // 删除空白符与换行符
+            }
         }),
 
         // clean dist before build
@@ -108,6 +114,7 @@ module.exports = {
 
         new webpack.NamedModulesPlugin(),
 
+        // hot module replace
         new webpack.HotModuleReplacementPlugin()
     ],
 
