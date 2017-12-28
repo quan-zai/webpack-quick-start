@@ -7,8 +7,8 @@ const CleanWebpackPlugin = require('clean-webpack-plugin')
 
 module.exports = {
     entry: {
-        lib: ['react'],
-        vendor: [],
+        vendor: ['react'],
+        // vendor: [],
         main: path.resolve(__dirname, 'src/main.js'),
     },
     output: {
@@ -75,18 +75,18 @@ module.exports = {
     plugins: [
         // 公用模块打包成chunk
         new webpack.optimize.CommonsChunkPlugin({
-            name: 'lib',
+            name: 'vendor',
             minChunks: Infinity,
         }),
 
         new webpack.optimize.CommonsChunkPlugin({
             name: 'manifest',
-            chunks: ['lib']
+            minChunk: 2,
+            chunks: ['main']
         }),
 
-        new webpack.HashedModuleIdsPlugin({
-
-        }),
+        // 对模块路径进行md5摘要，不仅可以实现持久化缓存，同时还避免了它引起的两个大问题（文件增大，路径泄露（由于使用NamedModulesPlugin用路径标记模块导致）），用NamedModulesPlugin可以轻松实现chunkhash的稳定化
+        new webpack.HashedModuleIdsPlugin(),
 
         // css单独打包成chunk
         new ExtractTextPlugin({
