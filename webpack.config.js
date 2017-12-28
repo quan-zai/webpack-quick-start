@@ -1,9 +1,12 @@
 const path = require('path');
+const os = require('os')
 const webpack = require('webpack');
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const CleanWebpackPlugin = require('clean-webpack-plugin')
+const HappyPack = require('happypack');
+const HappyThreadPool = HappyPack.ThreadPool({ size: os.cpus().length}); // 启动线程池});
+const UglifyJsParallelPlugin = require('webpack-uglify-parallel');
 
 module.exports = {
     entry: {
@@ -23,7 +26,8 @@ module.exports = {
             {
                 test: /\.js$/,
                 exclude: /node_modules/,
-                use: 'babel-loader'
+                // use: 'babel-loader'
+                use: 'happypack/loader?id=js'
             },
 
             // css-loader 解析css, style-loader 将样式插入到style标签 modules：css-modules 模块化css文件，防止污染全局
@@ -108,13 +112,6 @@ module.exports = {
             allChunks: true
         }),
 
-        // minify output js codes
-        // new UglifyJsPlugin({
-        //     compress: {
-        //         warnings: false
-        //     }
-        // }),
-
         // global var
         new webpack.ProvidePlugin({
             $: "jquery",
@@ -132,6 +129,23 @@ module.exports = {
             jQuery:"jquery",
             "window.jQuery":"jquery",
             CSSModules: "react-css-modules"
+        }),
+
+        // new UglifyJsParallelPlugin({
+        //     workers: os.cpus().length,
+        //     mangle: true,
+        //     compressor: {
+        //         warnings: false,
+        //         drop_console: true,
+        //         drop_debugger: true
+        //     }
+        // }),
+
+        // happypack的处理思路是将原有的webpack对loader的执行过程从单一进程的形式扩展多进程模式，原本的流程保持不变，这样可以在不修改原有配置的基础上来完成对编译过程的优化
+        new HappyPack({
+            id: 'js',
+            threadPool: HappyThreadPool,
+            loaders: ['babel-loader']
         })
     ],
 
