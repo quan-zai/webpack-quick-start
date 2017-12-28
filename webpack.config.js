@@ -14,8 +14,8 @@ module.exports = {
     output: {
         path: path.resolve(__dirname, './dist'),
         publicPath: '/',
-        filename: '[name].[hash].js',
-        chunkFilename: "[id].[chunkhash:8].js"
+        filename: '[name].[chunkhash].js',
+        // chunkFilename: "[id].[chunkhash:8].js"
     },
 
     module: {
@@ -73,16 +73,30 @@ module.exports = {
     },
     
     plugins: [
-        // 公用模块打包成chunk
+        // clean dist before build
+        new CleanWebpackPlugin(
+            ['dist']
+        ),
+
+        // generate html5 file for you that includes all your webpack bundles in the body using script tags.
+        new HtmlWebpackPlugin({
+            template: './src/index.html',
+            inject: 'body',
+            chunk: ['manifest', 'vendor', 'main'],
+        }),
+
+        // 将第三方库(library)（例如 lodash 或 react）提取到单独的 vendor chunk 文件中，是比较推荐的做法，这是因为，它们很少像本地的源代码那样频繁修改。因此通过实现以上步骤，利用客户端的长效缓存机制，可以通过命中缓存来消除请求，并减少向服务器获取资源，同时还能保证客户端代码和服务器端代码版本一致。这可以通过使用新的 entry(入口) 起点，以及再额外配置一个 CommonsChunkPlugin 实例的组合方式来实现：
         new webpack.optimize.CommonsChunkPlugin({
-            name: 'vendor',
-            minChunks: Infinity,
+            name: "vendor",
+            minChunks: function(module){
+                return module.context && module.context.indexOf("node_modules") !== -1;
+            }
         }),
 
         new webpack.optimize.CommonsChunkPlugin({
-            name: 'manifest',
-            minChunk: 2,
-            chunks: ['main']
+            name: "manifest",
+            filename: '[name].[hash].js',
+            minChunks: Infinity
         }),
 
         // 对模块路径进行md5摘要，不仅可以实现持久化缓存，同时还避免了它引起的两个大问题（文件增大，路径泄露（由于使用NamedModulesPlugin用路径标记模块导致）），用NamedModulesPlugin可以轻松实现chunkhash的稳定化
@@ -100,22 +114,6 @@ module.exports = {
         //         warnings: false
         //     }
         // }),
-
-        // generate html5 file for you that includes all your webpack bundles in the body using script tags.
-        new HtmlWebpackPlugin({
-            template: './src/index.html',
-            inject: 'body',
-            hash: true,
-            minify: {
-                removeComments: true,      // 移除html中的注释
-                collapseWhitespace: false  // 删除空白符与换行符
-            }
-        }),
-
-        // clean dist before build
-        new CleanWebpackPlugin(
-            ['dist']
-        ),
 
         // global var
         new webpack.ProvidePlugin({
