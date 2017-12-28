@@ -8,7 +8,6 @@ const CleanWebpackPlugin = require('clean-webpack-plugin')
 module.exports = {
     entry: {
         vendor: ['react'],
-        // vendor: [],
         main: path.resolve(__dirname, 'src/main.js'),
     },
     output: {
@@ -93,6 +92,7 @@ module.exports = {
             }
         }),
 
+        // 在每次修改后的构建结果中，将 webpack 的样板(boilerplate)和 manifest 提取出来。通过指定 entry 配置中未用到的名称，此插件会自动将我们需要的内容提取到单独的包中, 防止引起无关chunk的更新
         new webpack.optimize.CommonsChunkPlugin({
             name: "manifest",
             filename: '[name].[hash].js',
@@ -121,9 +121,6 @@ module.exports = {
             jQuery: "jquery",
             "window.jQuery": "jquery"
         }),
-
-        // 使用模块的相对路径作为模块的id
-        new webpack.NamedModulesPlugin(),
 
         // hot module replace
         new webpack.HotModuleReplacementPlugin(),
