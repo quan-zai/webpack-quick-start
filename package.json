@@ -20,7 +20,7 @@
   ],
   "scripts": {
     "start": "webpack-dev-server  --devtool eval --progress --colors",
-    "build": "webpack -p --display-modules --display-chunks"
+    "build": "webpack -p --display-modules --display-chunks --env=prod"
   },
   "dependencies": {
     "react": "^16.2.0",

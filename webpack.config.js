@@ -5,10 +5,10 @@ module.exports = function (env) {
             return require('./config/prod/webpack.prod')
             break
         case 'sit':
-            return require('./config/sit/webpack.prod')
+            return require('./config/sit/webpack.sit')
             break
         case 'dit':
-            return require('./config/dit/webpack.prod')
+            return require('./config/dit/webpack.dit')
             break
         case 'test':
         case 'testing':

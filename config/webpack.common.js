@@ -5,16 +5,12 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const CleanWebpackPlugin = require('clean-webpack-plugin')
 const HappyPack = require('happypack');
 const HappyThreadPool = HappyPack.ThreadPool({ size: os.cpus().length}); // 启动线程池});
+const ExtractTextPlugin = require('extract-text-webpack-plugin')
 
 module.exports = {
     entry: {
         vendor: ['react'],
-        main: path.resolve(__dirname, 'src/main.js'),
-    },
-    output: {
-        path: path.resolve(__dirname, './dist'),
-        publicPath: '/',
-        filename: '[name].[chunkhash].js',
+        main: path.resolve(__dirname, '../src/main.js'),
     },
 
     module: {
@@ -43,20 +39,6 @@ module.exports = {
                     fallback: "style-loader",
                     use: ["css-loader?modules", "sass-loader"]
                 })
-            },
-
-            // require img in js file, return DateURL
-            {
-                test: /\.(png|jpg|jpeg|gif)$/,
-                use: [
-                    {
-                        loader: 'file-loader',
-                        options: {
-                            limit: 1024,
-                            name: 'img/[name].[hash:8].[ext]'
-                        }
-                    }
-                ]
             },
 
             // font load
@@ -90,13 +72,6 @@ module.exports = {
             minChunks: function(module){
                 return module.context && module.context.indexOf("node_modules") !== -1;
             }
-        }),
-
-        // 在每次修改后的构建结果中，将 webpack 的样板(boilerplate)和 manifest 提取出来。通过指定 entry 配置中未用到的名称，此插件会自动将我们需要的内容提取到单独的包中, 防止引起无关chunk的更新
-        new webpack.optimize.CommonsChunkPlugin({
-            name: "manifest",
-            filename: '[name].[hash].js',
-            minChunks: Infinity
         }),
 
         // 对模块路径进行md5摘要，不仅可以实现持久化缓存，同时还避免了它引起的两个大问题（文件增大，路径泄露（由于使用NamedModulesPlugin用路径标记模块导致）），用NamedModulesPlugin可以轻松实现chunkhash的稳定化
