@@ -45,6 +45,7 @@
     "url-loader": "^0.6.2",
     "webpack": "2.7.0",
     "webpack-dev-server": "^2.9.7",
+    "webpack-merge": "^4.1.1",
     "webpack-uglify-parallel": "^0.1.4"
   }
 }
