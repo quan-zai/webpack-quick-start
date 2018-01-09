@@ -44,6 +44,9 @@ module.exports = webpackMerge(commonConfig, {
             allChunks: true
         }),
 
+        // hot module replace
+        new webpack.HotModuleReplacementPlugin(),
+
         new webpack.DefinePlugin({
             'process.env': {
                 'NODE_ENV': JSON.stringify('dev'),

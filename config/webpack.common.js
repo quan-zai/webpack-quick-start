@@ -77,9 +77,6 @@ module.exports = {
         // 对模块路径进行md5摘要，不仅可以实现持久化缓存，同时还避免了它引起的两个大问题（文件增大，路径泄露（由于使用NamedModulesPlugin用路径标记模块导致）），用NamedModulesPlugin可以轻松实现chunkhash的稳定化
         new webpack.HashedModuleIdsPlugin(),
 
-        // hot module replace
-        new webpack.HotModuleReplacementPlugin(),
-
         // public import
         new webpack.ProvidePlugin({
             'React': 'react',
