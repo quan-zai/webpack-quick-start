@@ -1,10 +1,15 @@
 import styles from './main.scss'
-import ReactDOM from 'react-dom'
+import { render } from 'react-dom'
+import { 
+    BrowserRouter, 
+    Link,
+    Route 
+} from 'react-router-dom'
+import App from './App/app'
 
-ReactDOM.render(
-    <div>
-        <h1 className={styles.h1}>333333</h1>
-        <img src={require('./browserify.png')} />
-    </div>,
+render(
+    <BrowserRouter>
+        <App />
+    </BrowserRouter>,
     document.getElementById('main')
 )

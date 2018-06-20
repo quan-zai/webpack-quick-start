@@ -24,20 +24,51 @@ module.exports = {
             },
 
             // css-loader 解析css, style-loader 将样式插入到style标签 modules：css-modules 模块化css文件，防止污染全局
-            {
-                test: /\.css$/,
-                use: ExtractTextPlugin.extract({
-                    fallback: "style-loader",
-                    use: "css-loader?modules"
-                })
-            },
+            // {
+            //     test: /\.css$/,
+            //     use: ExtractTextPlugin.extract({
+            //         fallback: "style-loader",
+            //         use: [{
+            //             loader: 'css-loader',
+            //             options: {
+            //                 modules: true,
+            //                 sourceMap: true,
+            //                 localIdentName: '[name]_[local]_[hash:base64:5]',
+            //                 importLoaders: 1,
+            //             }
+            //         }]
+            //     })
+            // },
 
             // 样式预编译
             {
-                test: /\.(sass|scss)$/,
+                test: /\.(css|sass|scss)$/,
                 use: ExtractTextPlugin.extract({
                     fallback: "style-loader",
-                    use: ["css-loader?modules", "sass-loader"]
+                    use: [{
+                        loader: 'css-loader',
+                        options: {
+                            modules: true,
+                            sourceMap: true,
+                            localIdentName: '[name]_[local]_[hash:base64:5]',
+                        }
+                    }, 
+                    // {
+                    //     loader: 'postcss-loader',
+                    //     options: {
+                    //       sourceMap: true,
+                    //       config: {
+                    //          path: path.resolve(__dirname, './postcss.config.js'),
+                    //       }
+                    //     },
+                    // }, 
+                    {
+                        loader: 'sass-loader',
+                        options: {
+                            sourceMap: true,
+                            localIdentName: '[name]_[local]_[hash:base64:5]',
+                        },
+                    }]
                 })
             },
 
@@ -79,8 +110,7 @@ module.exports = {
 
         // public import
         new webpack.ProvidePlugin({
-            'React': 'react',
-            CSSModules: "react-css-modules"
+            'React': 'react'
         }),
 
         // happypack的处理思路是将原有的webpack对loader的执行过程从单一进程的形式扩展多进程模式，原本的流程保持不变，这样可以在不修改原有配置的基础上来完成对编译过程的优化

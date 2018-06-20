@@ -35,7 +35,7 @@ module.exports = webpackMerge(commonConfig, {
         new webpack.optimize.CommonsChunkPlugin({
             name: "manifest",
             filename: '[name].js',
-            minChunks: Infinity,
+            minChunks: Infinity
         }),
 
         // css单独打包成chunk
