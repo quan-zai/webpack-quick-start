@@ -7,6 +7,11 @@
     "transform-decorators-legacy",
     "transform-class-properties",
     ["react-css-modules", {
+      "filetypes": {
+        ".scss": {
+          "syntax": "postcss-scss"
+        }
+      },
       "exclude": "node_modules",
       "generateScopedName": "[name]_[local]_[hash:base64:5]",
       "webpackHotModuleReloading": true
