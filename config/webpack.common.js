@@ -23,23 +23,6 @@ module.exports = {
                 use: 'happypack/loader?id=js'
             },
 
-            // css-loader 解析css, style-loader 将样式插入到style标签 modules：css-modules 模块化css文件，防止污染全局
-            // {
-            //     test: /\.css$/,
-            //     use: ExtractTextPlugin.extract({
-            //         fallback: "style-loader",
-            //         use: [{
-            //             loader: 'css-loader',
-            //             options: {
-            //                 modules: true,
-            //                 sourceMap: true,
-            //                 localIdentName: '[name]_[local]_[hash:base64:5]',
-            //                 importLoaders: 1,
-            //             }
-            //         }]
-            //     })
-            // },
-
             // 样式预编译
             {
                 test: /\.(css|sass|scss)$/,
@@ -53,15 +36,6 @@ module.exports = {
                             localIdentName: '[name]_[local]_[hash:base64:5]',
                         }
                     }, 
-                    // {
-                    //     loader: 'postcss-loader',
-                    //     options: {
-                    //       sourceMap: true,
-                    //       config: {
-                    //          path: path.resolve(__dirname, './postcss.config.js'),
-                    //       }
-                    //     },
-                    // }, 
                     {
                         loader: 'sass-loader',
                         options: {
